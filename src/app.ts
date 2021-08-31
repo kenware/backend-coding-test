@@ -3,6 +3,7 @@
 import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
+import RideController from './controller/ride';
 const app = express();
 
 import bodyParser from 'body-parser';
@@ -14,7 +15,7 @@ const appModule = (db) => {
 
     app.use('/swagger-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-    app.post('/rides', jsonParser, (req, res) => {
+    app.post('/rides', jsonParser, async (req, res) => {
         const startLatitude = Number(req.body.start_lat);
         const startLongitude = Number(req.body.start_long);
         const endLatitude = Number(req.body.end_lat);
@@ -58,48 +59,16 @@ const appModule = (db) => {
             });
         }
 
-        var values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
+        var values = [startLatitude, startLongitude, endLatitude, endLongitude, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
         
-        const result = db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-            if (err) {
-                return res.send({
-                    error_code: 'SERVER_ERROR',
-                    message: 'Unknown error'
-                });
-            }
+        const result = await db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values)
 
-            db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, function (err, rows) {
-                if (err) {
-                    return res.send({
-                        error_code: 'SERVER_ERROR',
-                        message: 'Unknown error'
-                    });
-                }
+        const response = await db.all('SELECT * FROM Rides WHERE rideID = ?', result.lastID)
 
-                res.send(rows);
-            });
-        });
+        return res.json(response);
     });
 
-    app.get('/rides', (req, res) => {
-        db.all('SELECT * FROM Rides', function (err, rows) {
-            if (err) {
-                return res.send({
-                    error_code: 'SERVER_ERROR',
-                    message: 'Unknown error'
-                });
-            }
-
-            if (rows.length === 0) {
-                return res.send({
-                    error_code: 'RIDES_NOT_FOUND_ERROR',
-                    message: 'Could not find any rides'
-                });
-            }
-
-            res.send(rows);
-        });
-    });
+    app.get('/rides', (req, res) => RideController.getRide(req, res, db))
 
     app.get('/rides/:id', (req, res) => {
         db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function (err, rows) {
