@@ -8,7 +8,7 @@ export default abstract class BaseController {
    * @param {mesage} string error
    * @param {status} HttpCode status
    */
-  static errorHandler(req: Request, res: Response, message: string, error_code: string, status: number,): any {
+  static errorHandler(req: Request, res: Response, message: string, error_code: string, status: number): any {
     return res.status(status || 400).json({
       message,
       error_code,

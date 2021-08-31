@@ -11,6 +11,7 @@ import { assert } from 'console';
 import { goodData, badEndLatData, badStartLatData } from './mock';
 import openDb from '../src/database';
 let app;
+let rideID
 
 describe('API tests', () => {
     before(async() => {
@@ -124,7 +125,6 @@ describe('API tests', () => {
         });
     });
 
-
     describe('GET /rides', () => {
         it('should find any ride', (done) => {
             request(app)
@@ -136,8 +136,35 @@ describe('API tests', () => {
                     assert(res.body.results[0].riderName, goodData.rider_name);
                     assert(res.body.results[0].driverName, goodData.driver_name);
                     assert(res.body.totalCount + '', '1');
+                    rideID = res.body.results[0].rideID;
                   })
                 .expect(200, done);
         }).timeout(10000);
+
+        it('should get ride by ID', (done) => {
+            request(app)
+                .get(`/rides/${rideID}`)
+                .expect('Content-Type', "application/json; charset=utf-8")
+                .expect(function(res, err) {
+                    console.log(res.body)
+                    assert(res.body[0].startLat, goodData.start_lat);
+                    assert(res.body[0].endLat, goodData.end_lat);
+                    assert(res.body[0].riderName, goodData.rider_name);
+                    assert(res.body[0].driverName, goodData.driver_name);
+                  })
+                .expect(200, done);
+        }).timeout(10000);
+
+        it('should fail to get rider that do not exist', (done) => {
+            request(app)
+                .get('/rides/-1')
+                .expect('Content-Type', "application/json; charset=utf-8")
+                .expect(function(res) {
+                    const message = 'Could not find any ride';
+                    assert(res.body.error_code, 'VALIDATION_ERROR');
+                    assert(res.body.message, message);
+                  })
+                .expect(200, done);
+        });
     });
 });
