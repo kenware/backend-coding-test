@@ -9,6 +9,7 @@ jobs:
           TEST_MYSQL_PASS: dehydrogenase
           TEST_MYSQL_DATABASE: database_test
     working_directory: ~/backend-coding-test
+    steps:
 
       # Download and cache dependencies
       - restore_cache:
