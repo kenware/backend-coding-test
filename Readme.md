@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/kenware/backend-coding-test/tree/master.svg?style=svg)](https://circleci.com/gh/kenware/backend-coding-test/tree/master)
 # Xendit Coding Exercise
 
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
