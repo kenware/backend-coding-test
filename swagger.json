@@ -53,7 +53,7 @@
           "200": {
             "description": "Succesful response",
             "schema": {
-              "$ref": "#/definitions/ApiResponse"
+              "$ref": "#/definitions/ApiListResponse"
             }
           },
           "400": {
@@ -85,11 +85,25 @@
           "application/json",
           "application/xml"
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "type": "integer"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Succesful response",
             "schema": {
-              "$ref": "#/definitions/ApiListResponse"
+              "$ref": "#/definitions/ApiPaginatedListResponse"
             }
           },
           "404": {
@@ -239,6 +253,7 @@
       "type": "array",
       "items": {
         "example": {
+          "id": 1,
           "start_lat": -50,
           "start_long": 90,
           "end_lat": -20,
@@ -246,6 +261,18 @@
           "rider_name": "kevin",
           "driver_name": "kevin",
           "driver_vehicle": "kevin"
+        }
+      }
+    },
+    "ApiPaginatedListResponse": {
+      "type": "object",
+      "properties": {
+        "totalCount": {
+          "type": "integer",
+          "example": 1
+        },
+        "results": {
+          "$ref": "#/definitions/ApiListResponse"
         }
       }
     },

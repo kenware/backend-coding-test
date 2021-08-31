@@ -4,25 +4,19 @@ import request from 'supertest';
 
 import sqlite3 from 'sqlite3'
 sqlite3.verbose();
-const db = new sqlite3.Database(':memory:');
 
 import server from '../src/app';
-const app = server(db);
 import buildSchemas from '../src/schemas';
 import { assert } from 'console';
 import { goodData, badEndLatData, badStartLatData } from './mock';
+import openDb from '../src/database';
+let app;
 
 describe('API tests', () => {
-    before((done) => {
-        db.serialize((err) => { 
-            if (err) {
-                return done(err);
-            }
-
-            buildSchemas(db);
-
-            done();
-        });
+    before(async() => {
+        const db = await openDb();
+        app = server(db);
+        buildSchemas(db);
     });
 
     describe('GET /health', () => {
@@ -45,7 +39,7 @@ describe('API tests', () => {
                     assert(res.body.message, 'Could not find any rides');
                   })
                 .expect(200, done);
-        });
+        }).timeout(1000);
     });
 
     describe('POST /rides', () => {
@@ -54,14 +48,15 @@ describe('API tests', () => {
                 .post('/rides')
                 .send(goodData)
                 .expect('Content-Type', "application/json; charset=utf-8")
-                .expect(function(res) {
+                .expect(function(res, err) {
+                    console.log(res.body)
                     assert(res.body[0].startLat, goodData.start_lat);
                     assert(res.body[0].endLat, goodData.end_lat);
                     assert(res.body[0].riderName, goodData.rider_name);
                     assert(res.body[0].driverName, goodData.driver_name);
                   })
                 .expect(200, done);
-        });
+        }).timeout(1000);;
 
         it('should fail to create a ride with bad start data', (done) => {
             request(app)
@@ -100,7 +95,7 @@ describe('API tests', () => {
                     assert(res.body.message, message);
                   })
                 .expect(200, done);
-        });
+        }).timeout(10000);
 
         it('should fail to create a ride without driver_name', (done) => {
             request(app)
@@ -131,17 +126,18 @@ describe('API tests', () => {
 
 
     describe('GET /rides', () => {
-        it('should not find any ride', (done) => {
+        it('should find any ride', (done) => {
             request(app)
-                .get('/rides')
+                .get('/rides?page=1&limit=1')
                 .expect('Content-Type', "application/json; charset=utf-8")
                 .expect(function(res) {
-                    assert(res.body[0].startLat, goodData.start_lat);
-                    assert(res.body[0].endLat, goodData.end_lat);
-                    assert(res.body[0].riderName, goodData.rider_name);
-                    assert(res.body[0].driverName, goodData.driver_name);
+                    assert(res.body.results[0].startLat, goodData.start_lat);
+                    assert(res.body.results[0].endLat, goodData.end_lat);
+                    assert(res.body.results[0].riderName, goodData.rider_name);
+                    assert(res.body.results[0].driverName, goodData.driver_name);
+                    assert(res.body.totalCount + '', '1');
                   })
                 .expect(200, done);
-        });
+        }).timeout(10000);
     });
 });
