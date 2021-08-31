@@ -1,12 +1,14 @@
 'use strict';
 
-const request = require('supertest');
+import request from 'supertest';
 
-const sqlite3 = require('sqlite3').verbose();
+import sqlite3 from 'sqlite3'
+sqlite3.verbose();
 const db = new sqlite3.Database(':memory:');
 
-const app = require('../src/app')(db);
-const buildSchemas = require('../src/schemas');
+import server from '../src/app';
+const app = server(db);
+import buildSchemas from '../src/schemas';
 
 describe('API tests', () => {
     before((done) => {

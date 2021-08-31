@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = (db) => {
+const Schema = (db) => {
     const createRideTableSchema = `
         CREATE TABLE Rides
         (
@@ -20,3 +20,4 @@ module.exports = (db) => {
 
     return db;
 };
+export default Schema;
