@@ -12,7 +12,7 @@ const jsonParser = bodyParser.json();
 module.exports = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
 
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use('/swagger-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
     app.post('/rides', jsonParser, (req, res) => {
         const startLatitude = Number(req.body.start_lat);
