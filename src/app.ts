@@ -1,15 +1,15 @@
 'use strict';
 
-const express = require('express');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../swagger.json');
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from '../swagger.json';
 const app = express();
 
-const bodyParser = require('body-parser');
+import bodyParser from 'body-parser';
 const jsonParser = bodyParser.json();
 
 
-module.exports = (db) => {
+const appModule = (db) => {
     app.get('/health', (req, res) => res.send('Healthy'));
 
     app.use('/swagger-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -123,3 +123,5 @@ module.exports = (db) => {
 
     return app;
 };
+
+export default appModule;
