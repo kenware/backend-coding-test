@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8
+        environment:
+          TEST_MYSQL_USER: root
+          TEST_MYSQL_HOST: localhost
+          TEST_MYSQL_PASS: dehydrogenase
+          TEST_MYSQL_DATABASE: database_test
+    working_directory: ~/backend-coding-test
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+
+      - run: npm install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # run tests!
+      - run: npm test
