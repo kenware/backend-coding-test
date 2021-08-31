@@ -10,6 +10,7 @@ jobs:
           TEST_MYSQL_DATABASE: database_test
     working_directory: ~/backend-coding-test
     steps:
+      - checkout
 
       # Download and cache dependencies
       - restore_cache:
