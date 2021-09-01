@@ -10,4 +10,4 @@ const port = 8010;
     const app = appModule(db);
 
     app.listen(port, () => logger.info(`App started and listening on port ${port}`));
-});
+})();

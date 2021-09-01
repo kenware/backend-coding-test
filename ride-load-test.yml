@@ -1,0 +1,25 @@
+config:
+  target: "https://localhost:8010"
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      name: test load
+scenarios:
+  - flow:
+    - post:
+        url: "/rides"
+        json:
+          start_lat: '30'
+          start_long: '50'
+          end_lat: '10'
+          end_long: '70'
+          rider_name: 'kevin'
+          driver_name: 'kevin'
+          driver_vehicle: 'kevin'
+        capture:
+          - json: "$.results[0].id"
+            as: "rideID"
+    - get:
+        url: "/rides/{{ideID}}"
+    - get:
+        url: "/rides"
