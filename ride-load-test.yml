@@ -1,11 +1,13 @@
 config:
-  target: "https://localhost:8010"
+  target: "http://localhost:8010"
   phases:
     - duration: 30
       arrivalRate: 5
       name: test load
 scenarios:
   - flow:
+    - get:
+      url: "/health"
     - post:
         url: "/rides"
         json:
@@ -17,7 +19,7 @@ scenarios:
           driver_name: 'kevin'
           driver_vehicle: 'kevin'
         capture:
-          - json: "$.results[0].id"
+          - json: "$.results[0].rideID"
             as: "rideID"
     - get:
         url: "/rides/{{ideID}}"
