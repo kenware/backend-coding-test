@@ -6,8 +6,6 @@ config:
       name: test load
 scenarios:
   - flow:
-    - get:
-      url: "/health"
     - post:
         url: "/rides"
         json:
