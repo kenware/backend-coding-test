@@ -11,8 +11,8 @@ The goal of these exercises are to assess your proficiency in software engineeri
 4. Run `npm test`
 5. Run `npm start`
 6. Hit the server to test health `curl localhost:8010/health` and expect a `200` response 
-### Documentation
-#### Local Server
+## Documentation
+### Local Server
 Follow these steps to bring up swagger documentation of this project in a web format in the browser.
 *  clone this project.
 * install packages.
@@ -25,6 +25,13 @@ Follow these steps to bring up swagger documentation of this project in a web fo
   ```
 * Navigate to http://localhost:8010/swagger-api-docs on your browser the view the documentation
 
-#### Remote server
+### Remote server
 * Deploy this project in the cloud eg AWS, Google cloud or Digital ocean
 * Navigate to `https://<cloud_server_url>/`swagger-api-docs on your browser the view the documentation
+
+## Test
+* Run test with `npm test`
+* for load test with artillery, run
+``` 
+  npm run test:load
+``` 
