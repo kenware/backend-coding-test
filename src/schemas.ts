@@ -1,7 +1,5 @@
-'use strict';
-
 const Schema = (db) => {
-    const createRideTableSchema = `
+  const createRideTableSchema = `
         CREATE TABLE Rides
         (
         rideID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -16,8 +14,8 @@ const Schema = (db) => {
         )
     `;
 
-    db.run(createRideTableSchema);
+  db.run(createRideTableSchema);
 
-    return db;
+  return db;
 };
 export default Schema;

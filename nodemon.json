@@ -1,4 +1,7 @@
 {
+  "events" : {
+    "restart": "npm run lint"
+  },
   "watch" : [
     "./build"
   ],
